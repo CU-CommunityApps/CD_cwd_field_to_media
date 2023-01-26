@@ -1,0 +1,5 @@
+name: CWD Image To Media
+type: module
+description: Custom module that creates a drush command for migrating image fields of a content type to a media field
+package: Custom
+core_version_requirement: ^8 || ^9

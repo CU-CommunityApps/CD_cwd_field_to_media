@@ -1,0 +1,5 @@
+services:
+  cwd_image_to_media.commands:
+    class: \Drupal\cwd_image_to_media\Commands\ConvertImage
+    tags:
+      - { name: drush.command }

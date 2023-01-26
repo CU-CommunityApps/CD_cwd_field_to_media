@@ -1,0 +1,19 @@
+{
+    "name": "cubear/cwd_image_to_media",
+    "description": "A Drupal 8 or 9 custom module that creates a drush command for migrating image fields of a content type to a media field.",
+    "type": "drupal-custom-module",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://it.cornell.edu/custom-web",
+    "authors": [
+        {
+            "name": "Bill Juda",
+            "email": "wfj24@cornell.edu",
+            "role": "Author"
+        }
+    ],
+    "support": {
+    },
+    "minimum-stability": "dev",
+    "require": {
+    }
+}
