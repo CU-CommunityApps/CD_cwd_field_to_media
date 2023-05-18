@@ -1,9 +1,5 @@
 services:
-  cwd_field_to_media.convertimage:
-    class: \Drupal\cwd_field_to_media\Commands\ConvertImage
-    tags:
-      - { name: drush.command }
-  cwd_field_to_media.convertfile:
-    class: \Drupal\cwd_field_to_media\Commands\ConvertFileField
+  cwd_field_to_media.convertfieldtomedia:
+    class: \Drupal\cwd_field_to_media\Commands\ConvertFieldToMedia
     tags:
       - { name: drush.command }
