@@ -12,6 +12,8 @@ class ConvertFileField extends DrushCommands {
    * @param string $nodeTypeMachineName machine name of node type you want to work on
    * @param string $sourceFieldMachineName machine name of the image field that has the image
    * @param string $mediaFieldMachineName machine name of the media filed you are moving the image to
+   * @param string $mediaEntityType machine name of the media type you wish to use
+   * @param string $mediaEntityFieldName machine name of the field on the media type that will be filled in
    * @options array $options has the dry run flag
    * @return void
    * 
