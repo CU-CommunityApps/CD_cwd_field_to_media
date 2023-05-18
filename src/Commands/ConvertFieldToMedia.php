@@ -28,7 +28,7 @@ class ConvertFieldToMedia extends DrushCommands {
     }
 
     if (is_null(\Drupal\media\Entity\MediaType::load($mediaEntityType))) {
-      echo "Error: Image media type not found. Cannot process until media type 'file' created.\n";
+      echo "Error: Image media type not found. Cannot process until media type '" . $mediaEntityType . "' created.\n";
       exit;
     }
 
