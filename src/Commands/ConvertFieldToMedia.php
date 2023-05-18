@@ -3,12 +3,12 @@ namespace Drupal\cwd_field_to_media\Commands;
 
 use Drush\Commands\DrushCommands;
 
-class ConvertFileField extends DrushCommands {
+class ConvertFieldToMedia extends DrushCommands {
   /**
    * Function to convert move files from file field to media field
    *
-   * @command cwd:convert-file-field
-   * @aliases cwd-cff
+   * @command cwd:convert-field-to-media
+   * @aliases cwd-cftm
    * @param string $nodeTypeMachineName machine name of node type you want to work on
    * @param string $sourceFieldMachineName machine name of the image field that has the image
    * @param string $mediaFieldMachineName machine name of the media filed you are moving the image to
@@ -17,7 +17,7 @@ class ConvertFileField extends DrushCommands {
    * @options array $options has the dry run flag
    * @return void
    * 
-   * @usage cwd:convert-file-field --dry-run
+   * @usage cwd:convert-field-to-media --dry-run
    */
   public function convertImage($nodeTypeMachineName, $sourceFieldMachineName, $mediaFieldMachineName, $mediaEntityType, $mediaEntityFieldName, $options = ['dry-run' => false]) {
     $dryRun = $options['dry-run'];
