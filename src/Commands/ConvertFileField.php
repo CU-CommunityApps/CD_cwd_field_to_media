@@ -17,7 +17,7 @@ class ConvertFileField extends DrushCommands {
    * 
    * @usage cwd:convert-file-field --dry-run
    */
-  public function convertImage($nodeTypeMachineName, $sourceFieldMachineName, $mediaEntityType, $mediaFieldMachineName, $options = ['dry-run' => false]) {
+  public function convertImage($nodeTypeMachineName, $sourceFieldMachineName, $mediaFieldMachineName, $mediaEntityType, $mediaEntityFieldName, $options = ['dry-run' => false]) {
     $dryRun = $options['dry-run'];
     $node_type = \Drupal\node\Entity\NodeType::load($nodeTypeMachineName);
     if (is_null($node_type)) {
@@ -31,7 +31,7 @@ class ConvertFileField extends DrushCommands {
     }
 
     if (is_null(\Drupal\field\Entity\FieldStorageConfig::loadByName("node", $mediaFieldMachineName))) {
-      echo "Error: Media field: " . $sourceFieldMachineName . " not found.\n";
+      echo "Error: Media field: " . $mediaFieldMachineName . " not found.\n";
       exit;
     }
 
@@ -67,7 +67,7 @@ class ConvertFileField extends DrushCommands {
           $media = \Drupal\media\Entity\Media::create([
             'bundle' => $mediaEntityType,
             'uid' => 1,
-            $mediaFieldMachineName => [
+            $mediaEntityFieldName => [
               'target_id' => $node->$sourceFieldMachineName->target_id,
             ],
           ]);
