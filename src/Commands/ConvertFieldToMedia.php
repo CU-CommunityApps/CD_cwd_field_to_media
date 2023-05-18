@@ -3,21 +3,23 @@ namespace Drupal\cwd_field_to_media\Commands;
 
 use Drush\Commands\DrushCommands;
 
-class ConvertImage extends DrushCommands {
+class ConvertFieldToMedia extends DrushCommands {
   /**
-   * Function to convert move images from image field to media field
+   * Function to convert move files from file field to media field
    *
-   * @command cwd:convert-image
-   * @aliases cwd-ci
+   * @command cwd:convert-field-to-media
+   * @aliases cwd-cftm
    * @param string $nodeTypeMachineName machine name of node type you want to work on
-   * @param string $imageFieldMachineName machine name of the image field that has the image
+   * @param string $sourceFieldMachineName machine name of the image field that has the image
    * @param string $mediaFieldMachineName machine name of the media filed you are moving the image to
+   * @param string $mediaEntityType machine name of the media type you wish to use
+   * @param string $mediaEntityFieldName machine name of the field on the media type that will be filled in
    * @options array $options has the dry run flag
    * @return void
    * 
-   * @usage cwd:convert-image --dry-run
+   * @usage cwd:convert-field-to-media --dry-run
    */
-  public function convertImage($nodeTypeMachineName, $imageFieldMachineName, $mediaFieldMachineName, $options = ['dry-run' => false]) {
+  public function convertImage($nodeTypeMachineName, $sourceFieldMachineName, $mediaFieldMachineName, $mediaEntityType, $mediaEntityFieldName, $options = ['dry-run' => false]) {
     $dryRun = $options['dry-run'];
     $node_type = \Drupal\node\Entity\NodeType::load($nodeTypeMachineName);
     if (is_null($node_type)) {
@@ -25,18 +27,18 @@ class ConvertImage extends DrushCommands {
       exit;
     }
 
-    if (is_null(\Drupal\media\Entity\MediaType::load('image'))) {
-      echo "Error: Image media type not found. Cannot process until media type 'image' created.\n";
+    if (is_null(\Drupal\media\Entity\MediaType::load($mediaEntityType))) {
+      echo "Error: Image media type not found. Cannot process until media type '" . $mediaEntityType . "' created.\n";
       exit;
     }
 
     if (is_null(\Drupal\field\Entity\FieldStorageConfig::loadByName("node", $mediaFieldMachineName))) {
-      echo "Error: Media field: " . $imageFieldMachineName . " not found.\n";
+      echo "Error: Media field: " . $mediaFieldMachineName . " not found.\n";
       exit;
     }
 
-    if (is_null(\Drupal\field\Entity\FieldStorageConfig::loadByName("node", $imageFieldMachineName))) {
-      echo "Error: Image field: " . $imageFieldMachineName . " not found.\n";
+    if (is_null(\Drupal\field\Entity\FieldStorageConfig::loadByName("node", $sourceFieldMachineName))) {
+      echo "Error: Image field: " . $sourceFieldMachineName . " not found.\n";
       exit;
     }
 
@@ -48,25 +50,27 @@ class ConvertImage extends DrushCommands {
       $countTotal++;
       $nodeTitle = $node->getTitle();
       $nodeID = $node->id();
-      $noImage = $node->get($imageFieldMachineName)->isEmpty();
-      $alreadyHasMedia = !$node->get($mediaFieldMachineName)->isEmpty();
-      if ($noImage) {
-        echo $nodeTitle . " (" . $nodeID . ") does not have an image to move to media\n";
+      $noFile = $node->get($sourceFieldMachineName)->isEmpty();
+      if ($noFile) {
+        echo $nodeTitle . " (" . $nodeID . ") does not have an file to move to media\n";
       }
+
+      $mediaCount = count($node->get($mediaFieldMachineName)->getValue());
+      $sourceCount = count($node->get($sourceFieldMachineName)->getValue());
+      $alreadyHasMedia = ($mediaCount == $sourceCount);
       if ($alreadyHasMedia) {
         echo $nodeTitle . " (" . $nodeID . ") already has media attached to it\n";
       }
 
-      $needsMediaAdded = !$noImage && !$alreadyHasMedia;
+      $needsMediaAdded = !$noFile && !$alreadyHasMedia;
       if ($needsMediaAdded) {
         $countNeedsImage++;
         if (!$dryRun) {
           $media = \Drupal\media\Entity\Media::create([
-            'bundle' => 'image',
+            'bundle' => $mediaEntityType,
             'uid' => 1,
-            'field_media_image' => [
-              'target_id' => $node->$imageFieldMachineName->target_id,
-              'alt' => $node->$imageFieldMachineName->alt,
+            $mediaEntityFieldName => [
+              'target_id' => $node->$sourceFieldMachineName->target_id,
             ],
           ]);
           $media->save();
